@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import kr.lavalse.lcalendarview.uiset.DayObject.OnViewCallbackListener;
@@ -43,6 +42,7 @@ public class DayPanelView extends View implements OnViewCallbackListener{
 	 * Variable for Calendar datas
 	 */
 	private Calendar cal;
+	
 	private int startDayOfMonth = 0; // Start day of this month
 	private int startDateOfWeekInMonth = 0; // Start week of this month
 	private int startDateOfWeek = 0; // Start first day of the week of this month
@@ -71,6 +71,12 @@ public class DayPanelView extends View implements OnViewCallbackListener{
 	private int today = 0;
 	private boolean isTodayMonth = false;
 	
+	/*
+	 *	Variable for day select listener 
+	 */
+	
+	private OnDaySelectedListener listener;
+	
 	public DayPanelView(LCalendarView parent, Calendar cal) {
 		super(parent.getContext());
 		
@@ -92,6 +98,7 @@ public class DayPanelView extends View implements OnViewCallbackListener{
 		/*
 		 *	Get datas of current month 
 		 */
+		
 		startDayOfMonth = cal.getActualMinimum(Calendar.DAY_OF_MONTH);
 		endDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
@@ -292,10 +299,14 @@ public class DayPanelView extends View implements OnViewCallbackListener{
 	}
 
 	@Override
-	public void refreshSelectedDay(int day) {
+	public void refreshSelectedDay(int day, int dayOfWeek) {
 		this.selectedDay = day;
-
+		
 		invalidate();
+		
+		if(listener != null){
+			listener.onDaySelected(parent.getCurrentYear(), parent.getCurrentMonth(), day, dayOfWeek);
+		}
 	}
 
 	@Override
@@ -325,5 +336,13 @@ public class DayPanelView extends View implements OnViewCallbackListener{
 				obj.setTimeType(OnViewCallbackListener.TIMETYPE_CURRENT);
 			}
 		}
+	}
+	
+	public void setOnDaySelectedListener(OnDaySelectedListener listener){
+		this.listener = listener;
+	}
+	
+	public interface OnDaySelectedListener{
+		public void onDaySelected(int year, int month, int day, int dayOfWeek);
 	}
 }

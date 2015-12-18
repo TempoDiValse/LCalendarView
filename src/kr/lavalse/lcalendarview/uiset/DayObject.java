@@ -20,7 +20,6 @@ public class DayObject{
 	private int date = 0;
 	
 	private boolean isToday = false;
-	private boolean isWeekend = false;
 	private boolean isEndOfMonth = false;
 	private boolean isSelected = false;
 	
@@ -79,6 +78,8 @@ public class DayObject{
 		txtFrame.setAntiAlias(true);
 		txtFrame.setTextSize(35);
 		txtFrame.setTextAlign(Align.CENTER);
+		if(date == 1) txtFrame.setColor(Color.BLUE);
+		if(date == 7) txtFrame.setColor(Color.RED);
 		
 		lPaint = new Paint();
 		lPaint.setAntiAlias(true);
@@ -109,6 +110,10 @@ public class DayObject{
 		}
 	}
 	
+	/**
+	 * Set Objects frame size
+	 * @param frame Get width/height on the parent view from 'onLayout()' or 'setCalendar()'
+	 */
 	public void setFrame(RectF frame){
 		this.frame = frame;
 		
@@ -120,22 +125,42 @@ public class DayObject{
 		this.selectedFrame = new RectF(offsetX, offsetY, offsetX+width, offsetY+height);
 	}
 	
+	/**
+	 * Set frame background color
+	 * @param color
+	 */
 	public void setFrameColor(int color){
 		pFrame.setColor(color);
 	}
 	
+	/**
+	 * Set frame background color when it is selected
+	 * @param color
+	 */
 	public void setFrameSelectedColor(int color){
 		sFrame.setColor(color);
 	}
 	
+	/**
+	 * Set frame today object of background color
+	 * @param color
+	 */
 	public void setTodayColor(int color){
 		todayFrame.setColor(color);
 	}
 	
+	/**
+	 * set day of each objects
+	 * @param day
+	 */
 	public void setDay(int day){
 		this.dayNumber = day;
 	}
 	
+	/**
+	 * set day of week of each objects
+	 * @param date
+	 */
 	public void setDate(int date){
 		this.date = date;
 	}
@@ -148,54 +173,29 @@ public class DayObject{
 		this.isToday = state;
 	}
 	
-	public void setStateWeekend(boolean state){
-		this.isWeekend = state;
-	}
-	
+	/**
+	 * to know the object whether it is in the end of the month or not
+	 * @param state
+	 */
 	public void setStateEndOfMonth(boolean state){
 		this.isEndOfMonth = state;
 	}
 	
+	/**
+	 * classify object type of time
+	 * 
+	 * OnViewCallbackListener.TIMETYPE_PREVIOUS -1
+	 * OnViewCallbackListener.TIMETYPE_CURRENT 0
+	 * OnViewCallbackListener.TIMETYPE_NEXT 1
+	 * 
+	 * @param timeType
+	 */
 	public void setTimeType(int timeType){
 		this.timeType = timeType;
 	}
 		
 	public void setOnViewCallbackListener(OnViewCallbackListener listener){
 		this.listener = listener;
-	}
-	
-	private String convertDateIntToString(int date){
-		String str = "";
-		
-		switch(date){
-		case Calendar.MONDAY:
-			str = "월";
-			break;
-		case Calendar.TUESDAY:
-			str = "화";
-			break;
-		case Calendar.WEDNESDAY:
-			str = "수";
-			break;
-		case Calendar.THURSDAY:
-			str = "목";
-			break;
-		case Calendar.FRIDAY:
-			str = "금";
-			break;
-		case Calendar.SATURDAY:
-			str = "토";
-			break;
-		case Calendar.SUNDAY:
-			str = "일";
-			break;
-		}
-		
-		if(str.equals("")){
-			System.err.println("INVALID INTEGER VALUE "+date);
-		}
-		
-		return str;
 	}
 	
 	public void onTouchEvent(MotionEvent ev){
@@ -205,7 +205,7 @@ public class DayObject{
 		if(listener != null){
 			if(offsetX <= touchX && offsetX+width >= touchX && offsetY <= touchY && offsetY+height >= touchY){
 				if(timeType == OnViewCallbackListener.TIMETYPE_CURRENT)
-					listener.refreshSelectedDay(dayNumber);
+					listener.refreshSelectedDay(dayNumber, date);
 				else if(timeType == OnViewCallbackListener.TIMETYPE_PREVIOUS)
 					listener.movePrevMonthWithSelectedDay(dayNumber);
 				else
@@ -237,6 +237,6 @@ public class DayObject{
 		 * When day of current month is tapped
 		 * @param day selected day
 		 */
-		public void refreshSelectedDay(int day);
+		public void refreshSelectedDay(int day, int dayOfWeek);
 	}
 }

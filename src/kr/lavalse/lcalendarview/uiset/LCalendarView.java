@@ -6,6 +6,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
+import kr.lavalse.lcalendarview.uiset.DayPanelView.OnDaySelectedListener;
 
 public class LCalendarView extends LinearLayout{
 	/*
@@ -15,6 +16,9 @@ public class LCalendarView extends LinearLayout{
 	private int todayYear = 0;
 	private int todayMonth = 0;
 	private int today = 0;
+	
+	private int currentYear = 0;
+	private int currentMonth = 0;
 		
 	/*
 	 * Variable of Related View
@@ -42,8 +46,8 @@ public class LCalendarView extends LinearLayout{
 		setOrientation(LinearLayout.VERTICAL);
 		cal = Calendar.getInstance();
 		
-		todayYear = cal.get(Calendar.YEAR);
-		todayMonth = cal.get(Calendar.MONTH) + 1;
+		currentYear = todayYear = cal.get(Calendar.YEAR);
+		currentMonth = todayMonth = cal.get(Calendar.MONTH) + 1;
 		today = cal.get(Calendar.DATE);
 		
 		nav = new NavigationObjectView(context);
@@ -79,8 +83,8 @@ public class LCalendarView extends LinearLayout{
 	public void movePrev(){
 		cal.add(Calendar.MONTH, -1);
 		
-		int currentYear = cal.get(Calendar.YEAR);
-		int currentMonth = cal.get(Calendar.MONTH)+1;
+		currentYear = cal.get(Calendar.YEAR);
+		currentMonth = cal.get(Calendar.MONTH)+1;
 		
 		boolean isTodayMonth = compareTodayAndCurrentDate(currentYear, currentMonth);
 
@@ -92,8 +96,8 @@ public class LCalendarView extends LinearLayout{
 	public void moveNext(){
 		cal.add(Calendar.MONTH, 1);
 		
-		int currentYear = cal.get(Calendar.YEAR);
-		int currentMonth = cal.get(Calendar.MONTH)+1;
+		currentYear = cal.get(Calendar.YEAR);
+		currentMonth = cal.get(Calendar.MONTH)+1;
 		
 		boolean isTodayMonth = compareTodayAndCurrentDate(currentYear, currentMonth);
 
@@ -109,5 +113,17 @@ public class LCalendarView extends LinearLayout{
 	@Override
 	public boolean performClick() {
 		return super.performClick();
+	}
+	
+	public void setOnDaySelectedListener(OnDaySelectedListener listener){
+		panel.setOnDaySelectedListener(listener);
+	}
+	
+	public int getCurrentYear(){
+		return currentYear;
+	}
+	
+	public int getCurrentMonth(){
+		return currentMonth;
 	}
 }
