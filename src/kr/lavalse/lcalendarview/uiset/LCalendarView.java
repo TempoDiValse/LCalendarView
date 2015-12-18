@@ -126,4 +126,12 @@ public class LCalendarView extends LinearLayout{
 	public int getCurrentMonth(){
 		return currentMonth;
 	}
+	
+	/**
+	 * Set date format of Calendar Navigator
+	 * @param format default -> "yyyy³â MM¿ù"
+	 */
+	public void setNavigationDateFormat(String format){
+		nav.setFormat(format);
+	}
 }
